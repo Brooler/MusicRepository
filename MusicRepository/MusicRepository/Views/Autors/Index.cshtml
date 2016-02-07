@@ -1,0 +1,20 @@
+﻿@using MusicRepository.HtmlHalpers
+@model MusicRepository.Models.AutorListViewModel
+
+@{
+    ViewBag.Title = "Autors";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+@foreach (var item in Model.Autors)
+{
+    Html.RenderAction("AutorSummary", "Autors", new {id=item.AutorId});
+}
+<div class="pager">
+    @Html.PageLinks(Model.PagingInfo, x => Url.Action("Index",
+    new { page = x}))
+</div>

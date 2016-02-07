@@ -1,0 +1,70 @@
+﻿@model MusicRepository.Models.AlbumDetails
+
+@{
+    ViewBag.Title = "Delete Warning";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<hr/>
+<h4>You cant delete this album, because there are some relations with tracks</h4>
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            <b>Title</b>
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => m.AlbumName)
+        </dd>
+        <dt>
+            <b>Autor</b>
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.AutorName, "Details/" + Model.AutorId, "Autors")
+        </dd>
+        <dt>
+            <b>Description</b>
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => m.Description)
+        </dd>
+        <dt>
+            <b>Rate</b>
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => m.Rate)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new {id = Model.Id})
+    @Html.ActionLink("Back to List", "Index")
+</p>
+<div>
+    <h4>Tracks in album</h4>
+    <table class="table">
+        <tr>
+            <th>
+                <b>Name</b>
+            </th>
+            <th>
+                <b>Rate</b>
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model.tracks)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Name, "Details/" + item.TrackId, "Tracks")
+                </td>
+                <td>
+                    @Html.DisplayFor(m => m.Rate)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete/"+item.TrackId, "Tracks")
+                </td>
+            </tr>
+        }
+    </table>
+</div>

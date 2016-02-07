@@ -1,0 +1,76 @@
+﻿@model MusicRepository.Models.AutorDetails
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+
+
+<div>
+    <h4>Autor</h4>
+    <hr/>
+    <div style="float: right; margin-left: 20px; margin-right: 20px">
+        @if (ViewBag.Autor.ImageData == null)
+        {
+            @:None
+        }
+        else
+        {
+            <img width="150" height="150" src="@Url.Action("GetImage", "Autors", new {ViewBag.Autor.AutorId})" />
+        }
+    </div>
+
+    <div style="float: left">
+        <dl class="dl-horizontal">
+            <dt>
+                <b>Name</b>
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt>
+                <b>Description</b>
+            </dt>
+
+            <dd style="width: 700px">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+        </dl>
+    </div>
+</div>
+<p style="width: 500px">
+    @Html.ActionLink("Edit", "Edit", new {id = Model.Id}) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+<hr/>
+<div style="width: 700px">
+    <h4>Autor's albums</h4>
+    <table class="table">
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Rate
+            </th>
+        </tr>
+        @foreach (var item in Model.albums)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Name, "Details/" + item.AlbumId, "Albums")
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Rate)
+                </td>
+            </tr>
+        }
+    </table>
+    <hr/>
+    @Html.ActionLink("Add album for this Autor", "Create/" + Model.Id.ToString(), "Albums")
+</div>

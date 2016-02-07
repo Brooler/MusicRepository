@@ -1,0 +1,58 @@
+﻿@using System.ServiceModel.Channels
+@model MusicRepository.Models.AutorDetails
+
+@{
+    ViewBag.Title = "DeleteWarning";
+}
+
+<h2>@ViewBag.Title</h2>
+<hr/>
+<h4>You cant delete this autor, becouse there are some relations with albums</h4>
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            <b>Name</b>
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => m.Name)
+        </dd>
+        <dt>
+            <b>Description</b>
+        </dt>
+        <dd>
+            @Html.DisplayFor(m => m.Description)
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new {id = Model.Id})|
+    @Html.ActionLink("Back to List", "Index")
+</p>
+<div>
+    <h4>Autor's albums</h4>
+    <table class="table">
+        <tr>
+            <th>
+                <b>Title</b>
+            </th>
+            <th>
+                <b>Rate</b>
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model.albums)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Name, "Details/" + item.AlbumId, "Albums")
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Rate)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete/"+item.AlbumId, "Albums")
+                </td>
+            </tr>
+        }
+    </table>
+</div>

@@ -1,0 +1,46 @@
+﻿@model MusicRepository.Models.TrackDetail
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Track</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            <b>Name</b>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TrackName)
+        </dd>
+        <dt>
+            <b>Album</b>
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.AlbumName, "Details/" + Model.AlbumId, "Albums")
+        </dd>
+        <dt>
+            <b>Autor</b>
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.AutorName, "Details/" + Model.AutorId, "Autors")
+        </dd>
+        <dt>
+            <b>Rate</b>
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rate)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

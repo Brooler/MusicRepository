@@ -1,0 +1,87 @@
+﻿@model MusicRepository.Models.AlbumDetails
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    <h4>Album</h4>
+    <hr/>
+    <div style="float: right; margin-left: 20px; margin-right: 20px">
+        @if (ViewBag.Album.ImageData == null)
+        {
+            @:None
+        }
+        else
+        {
+            <img width="150" height="150" src="@Url.Action("GetImage", "Albums", new {id = ViewBag.Album.AlbumId})"/>
+        }
+    </div>
+    <div style="float: left">
+        <dl class="dl-horizontal">
+
+            <dt>
+                <b>Title</b>
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AlbumName)
+            </dd>
+            <dt>
+                <b>Autor</b>
+            </dt>
+            <dd>
+                @Html.ActionLink(Model.AutorName, "Details/" + Model.AutorId, "Autors")
+            </dd>
+            <dt>
+                <b>Description</b>
+            </dt>
+
+            <dd style="width: 800px">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+            <dt>
+                <b>Rate</b>
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Rate)
+            </dd>
+
+        </dl>
+    </div>
+</div>
+<p style="width: 800px">
+    @Html.ActionLink("Edit", "Edit", new {id = Model.Id}) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+<hr/>
+<div style="width: 800px">
+    <h4>Songs in this album</h4>
+    <table class="table">
+        <tr>
+            <th>
+                <b>Name</b>
+            </th>
+            <th>
+                <b>Rate</b>
+            </th>
+        </tr>
+        @foreach (var item in Model.tracks)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Name, "Details/" + item.TrackId, "Tracks")
+                </td>
+                <td>
+                    @Html.DisplayFor(m => item.Rate)
+                </td>
+            </tr>
+        }
+    </table>
+    <hr />
+    @Html.ActionLink("Add song to this album", "Create/" + Model.Id, "Tracks")
+</div>

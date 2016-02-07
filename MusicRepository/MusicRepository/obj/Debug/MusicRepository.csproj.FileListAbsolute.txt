@@ -1,0 +1,79 @@
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\csc.exe
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\Microsoft.CodeAnalysis.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\Microsoft.CSharp.Core.targets
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\Microsoft.VisualBasic.Core.targets
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\System.Collections.Immutable.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\System.Reflection.Metadata.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\vbc.exe
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\VBCSCompiler.exe
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\roslyn\VBCSCompiler.exe.config
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\MusicRepository.dll.config
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\MusicRepository.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\MusicRepository.pdb
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\EntityFramework.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\EntityFramework.SqlServer.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\Microsoft.Web.Infrastructure.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Helpers.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Mvc.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Razor.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Webpages.Deployment.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Webpages.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Webpages.Razor.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\EntityFramework.xml
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\EntityFramework.SqlServer.xml
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Razor.xml
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Webpages.xml
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Webpages.Deployment.xml
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Webpages.Razor.xml
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Helpers.xml
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\bin\System.Web.Mvc.xml
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\obj\Debug\MusicRepository.dll
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\obj\Debug\MusicRepository.pdb
+c:\users\marya\documents\visual studio 2015\Projects\MusicRepository\MusicRepository\obj\Debug\MusicRepository.csprojResolveAssemblyReference.cache
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\csc.exe
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\System.Collections.Immutable.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\System.Reflection.Metadata.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\vbc.exe
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\VBCSCompiler.exe
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\roslyn\VBCSCompiler.exe.config
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\MusicRepository.dll.config
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\MusicRepository.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\MusicRepository.pdb
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\EntityFramework.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\EntityFramework.SqlServer.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Helpers.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Mvc.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Razor.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Webpages.Deployment.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Webpages.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Webpages.Razor.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\EntityFramework.xml
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\EntityFramework.SqlServer.xml
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Razor.xml
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Webpages.xml
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Webpages.Deployment.xml
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Webpages.Razor.xml
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Helpers.xml
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\bin\System.Web.Mvc.xml
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\obj\Debug\MusicRepository.csprojResolveAssemblyReference.cache
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\obj\Debug\MusicRepository.dll
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\obj\Debug\MusicRepository.pdb
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\obj\Debug\MusicRepository.Migrations.InitialCreate.resources
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\obj\Debug\MusicRepository.csproj.GenerateResource.Cache
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\obj\Debug\MusicRepository.Migrations.AddAutorImageData.resources
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\obj\Debug\MusicRepository.Migrations.Undefined.resources
+C:\Users\marya\OneDrive\Development\ASP.NET\MusicRepository\MusicRepository\obj\Debug\MusicRepository.Migrations.Buckup.resources
