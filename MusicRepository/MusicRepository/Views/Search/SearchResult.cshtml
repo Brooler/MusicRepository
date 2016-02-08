@@ -1,0 +1,67 @@
+﻿@model MusicRepository.Models.SearchResults
+
+@{
+    ViewBag.Title = "SearchResult";
+}
+
+<h2>Search Results: @Model.Query</h2>
+@if (Model.Autors.Count > 0)
+{
+    <h3>Autors</h3>
+    foreach (var item in Model.Autors)
+    {
+        Html.RenderAction("AutorSummary", "Autors", new { id = item.AutorId });
+    }
+    <hr/>
+}
+ @if (Model.Albums.Count > 0)
+ {
+     <h3>Albums</h3>
+     foreach (var item in Model.Albums)
+     {
+         Html.RenderAction("AlbumSummary", "Albums", new { id = item.AlbumId });
+     }
+     <hr/>
+ }
+ @if (Model.Tracks.Count > 0)
+ {
+     <h3>Tracks</h3>
+    <table class="table">
+        <tr>
+            <th>
+                <b>Autor</b>
+            </th>
+            <th>
+                <b>Album</b>
+            </th>
+            <th>
+                <b>Name</b>
+            </th>
+            <th>
+                <b>Rate</b>
+            </th>
+            <th></th>
+        </tr>
+        @foreach (var item in Model.Tracks)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.AutorName, "Details/" + item.AutorId, "Autors")
+                </td>
+                <td>
+                    @Html.ActionLink(item.AlbumName, "Details/" + item.AlbumId, "Albums")
+                </td>
+                <td>
+                    @Html.ActionLink(item.TrackName, "Details", new { id = item.Id })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rate)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+        </table>
+ }

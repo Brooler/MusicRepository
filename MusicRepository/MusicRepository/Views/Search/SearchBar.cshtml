@@ -1,0 +1,6 @@
+﻿@model MusicRepository.Models.SearchModel
+@using (Html.BeginForm("SearchResult", "Search"))
+{
+    @Html.TextBoxFor(m => m.Query)
+    <input type="submit" value="Search"/>
+}

@@ -15,8 +15,15 @@
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Music Repository", "Index", "Autors", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("Music Repository", "Index", "Autors", new {area = ""}, new {@class = "navbar-brand"})
+
             </div>
+            <div style="float: right; margin-top: 15px">
+                @{
+                    Html.RenderAction("SearchBar", "Search");
+                }
+            </div>
+
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                 </ul>
