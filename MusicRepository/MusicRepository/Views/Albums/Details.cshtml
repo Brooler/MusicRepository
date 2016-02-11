@@ -16,7 +16,7 @@
         }
         else
         {
-            <img width="150" height="150" src="@Url.Action("GetImage", "Albums", new {id = ViewBag.Album.AlbumId})"/>
+            <img width="150" height="150" src="@Url.Action("GetImage", "Albums", new {id = Model.Id})"/>
         }
     </div>
     <div style="float: left">

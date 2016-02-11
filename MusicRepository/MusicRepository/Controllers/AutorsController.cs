@@ -15,21 +15,11 @@ namespace MusicRepository.Controllers
     public class AutorsController : Controller
     {
         private MusicContext db = new MusicContext();
-        private int PageSize=5;
+        private int PageSize = 5;
         // GET: Autors
-        public ActionResult Index(int page=1)
+        public ActionResult Index(int page = 1)
         {
-            AutorListViewModel model = new AutorListViewModel
-            {
-                Autors = db.Autors.OrderBy(m => m.AutorId).Skip((page - 1)*PageSize).Take(PageSize),
-                PagingInfo = new PagingInfo
-                {
-                    CurrentPage = page,
-                    ItemsPerPage = PageSize,
-                    TotalItems = db.Autors.Count()
-                }
-            };
-            return View(model);
+            return View(AutorListViewModelInitializer(page));
         }
 
         // GET: Autors/Details/5
@@ -39,18 +29,12 @@ namespace MusicRepository.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Autor autor = db.Autors.Find(id);
-            if (autor == null)
+            if (db.Autors.Find(id) == null)
             {
                 return HttpNotFound();
             }
-            AutorDetails model = new AutorDetails();
-            model.Id = autor.AutorId;
-            model.Name = autor.Name;
-            model.Description = autor.Description;
-            model.albums = db.Albums.Where(a => a.AutorId == autor.AutorId).ToList();
-            ViewBag.Autor = autor;
-            return View(model);
+            ViewBag.Autor = GetAutor(id);
+            return View(DetailsViewModelInitializer((int)id));
         }
 
         // GET: Autors/Create
@@ -70,15 +54,12 @@ namespace MusicRepository.Controllers
             {
                 if (image != null)
                 {
-                    autor.ImageMimeType = image.ContentType;
-                    autor.ImageData = new byte[image.ContentLength];
-                    image.InputStream.Read(autor.ImageData, 0, image.ContentLength);
+                    AddImage(autor, image);
                 }
                 db.Autors.Add(autor);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
             return View(autor);
         }
 
@@ -89,17 +70,17 @@ namespace MusicRepository.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Autor autor = db.Autors.Find(id);
-            if (autor == null)
+            if (db.Autors.Find(id) == null)
             {
                 return HttpNotFound();
             }
-            return View(autor);
+            return View(GetAutor(id));
         }
 
         // POST: Autors/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Autor autor, HttpPostedFileBase image)
@@ -108,9 +89,7 @@ namespace MusicRepository.Controllers
             {
                 if (image != null)
                 {
-                    autor.ImageMimeType = image.ContentType;
-                    autor.ImageData = new byte[image.ContentLength];
-                    image.InputStream.Read(autor.ImageData, 0, image.ContentLength);
+                    AddImage(autor, image);
                 }
                 db.Entry(autor).State = EntityState.Modified;
                 db.SaveChanges();
@@ -126,22 +105,15 @@ namespace MusicRepository.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Autor autor = db.Autors.Find(id);
-            Album album = db.Albums.FirstOrDefault(m => m.AutorId == autor.AutorId);
-            if (album != null)
+            if (db.Autors.Find(id) != null)
             {
-                AutorDetails mod=new AutorDetails();
-                mod.Id = autor.AutorId;
-                mod.Name = autor.Name;
-                mod.Description = autor.Description;
-                mod.albums = db.Albums.Where(m => m.AutorId == autor.AutorId).ToList();
-                return View("DeleteWarning", mod);
+                return View("DeleteWarning", DeleteWarningViewModelInitializer((int)id));
             }
-            if (autor == null)
+            if (db.Autors.Find(id) == null)
             {
                 return HttpNotFound();
             }
-            return View(autor);
+            return View(GetAutor(id));
         }
 
         // POST: Autors/Delete/5
@@ -179,10 +151,79 @@ namespace MusicRepository.Controllers
 
         public PartialViewResult AutorSummary(int id)
         {
-            Autor autor = db.Autors.FirstOrDefault(m => m.AutorId == id);
-            int count = db.Albums.Where(m => m.AutorId == autor.AutorId).ToList().Count;
-            ViewBag.Albums = count;
+            Autor autor = GetAutor(id);
+            ViewBag.Albums = db.Albums.Where(m => m.AutorId == autor.AutorId).Count();
             return PartialView(autor);
+        }
+
+
+
+        //_____________________________________________________________________________________
+        //private methods
+        private Autor GetAutor(int? id)
+        {
+            if (id != null)
+            {
+                return db.Autors.Find(id);
+            }
+            else
+            {
+                return new Autor();
+            }
+        }
+
+        private List<Album> GetAlbums(int AutorId)
+        {
+            return db.Albums.Where(m=>m.AutorId==AutorId).ToList();
+        } 
+        private AutorListViewModel AutorListViewModelInitializer(int page)
+        {
+            AutorListViewModel result = new AutorListViewModel
+            {
+                Autors = db.Autors.OrderBy(m => m.AutorId).Skip((page - 1)*PageSize).Take(PageSize),
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = PageSize,
+                    TotalItems = db.Autors.Count()
+                }
+            };
+            return result;
+        }
+
+        private AutorDetails DetailsViewModelInitializer(int id)
+        {
+            Autor autor = GetAutor(id);
+            AutorDetails result = new AutorDetails
+            {
+                albums = new List<Album>(),
+                Description = autor.Description,
+                Id = id,
+                Name = autor.Name
+            };
+            result.albums = GetAlbums(id);
+            return result;
+        }
+
+        private Autor AddImage(Autor autor, HttpPostedFileBase image)
+        {
+            autor.ImageMimeType = image.ContentType;
+            autor.ImageData = new byte[image.ContentLength];
+            image.InputStream.Read(autor.ImageData, 0, image.ContentLength);
+            return autor;
+        }
+
+        private AutorDetails DeleteWarningViewModelInitializer(int id)
+        {
+            Autor autor = GetAutor(id);
+            AutorDetails result = new AutorDetails
+            {
+                albums = GetAlbums(id),
+                Description = autor.Description,
+                Id = id,
+                Name = autor.Name
+            };
+            return result;
         }
     }
 }

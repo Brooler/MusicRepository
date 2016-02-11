@@ -13,37 +13,12 @@ namespace MusicRepository.Controllers
     public class TracksController : Controller
     {
         private MusicContext db = new MusicContext();
-        private List<Album> albums;
-        private TrackViewModel model;
         private int PageSize = 15;
 
         // GET: Tracks
         public ActionResult Index(int page=1)
         {
-            IEnumerable<Track> tracks = db.Tracks.OrderBy(m=>m.TrackId).Skip((page-1)*PageSize).Take(PageSize);
-            TrackListViewModel viewModel = new TrackListViewModel();
-            viewModel.List = new List<TrackDetail>();
-            foreach (var t in tracks)
-            {
-                var mod = new TrackDetail();
-                mod.Id = t.TrackId;
-                mod.AlbumId = t.AlbumId;
-                mod.TrackName = t.Name;
-                mod.Rate = t.Rate;
-                Album album = db.Albums.FirstOrDefault(m => m.AlbumId == t.AlbumId);
-                mod.AlbumName = album.Name;
-                mod.AutorId = album.AutorId;
-                Autor autor = db.Autors.FirstOrDefault(m => m.AutorId == album.AutorId);
-                mod.AutorName = autor.Name;
-                viewModel.List.Add(mod);
-            }
-            viewModel.PagingInfo=new PagingInfo
-            {
-                CurrentPage = page,
-                ItemsPerPage = PageSize,
-                TotalItems = db.Tracks.Count()
-            };
-            return View(viewModel);
+            return View(TrackListViewModelInitializer(page));
         }
 
         // GET: Tracks/Details/5
@@ -53,37 +28,18 @@ namespace MusicRepository.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Track track = db.Tracks.Find(id);
-            if (track == null)
+            if (db.Tracks.Find(id) == null)
             {
                 return HttpNotFound();
             }
-            TrackDetail mod = new TrackDetail();
-            mod.Id = track.TrackId;
-            mod.AlbumId = track.AlbumId;
-            mod.TrackName = track.Name;
-            mod.Rate = track.Rate;
-            Album album = db.Albums.FirstOrDefault(m => m.AlbumId == track.AlbumId);
-            mod.AlbumName = album.Name;
-            mod.AutorId = album.AutorId;
-            Autor autor = db.Autors.FirstOrDefault(m => m.AutorId == album.AutorId);
-            mod.AutorName = autor.Name;
-            return View(mod);
+            return View(TrackDetailViewModelInitializer((int)id));
         }
 
         // GET: Tracks/Create
         public ActionResult Create(int? id = null)
         {
-            if (id == null)
-            {
-                ViewModelConfig();
-            }
-            else
-            {
-                ViewModelConfig(null, id);
-            }
             ViewBag.Title = "Create";
-            return View(model);
+            return View(ChangeObjectViewModelInitializer(null, id));
         }
 
         // POST: Tracks/Create
@@ -95,16 +51,9 @@ namespace MusicRepository.Controllers
         {
             if (ModelState.IsValid)
             {
-                Track track=new Track();
-                track.Name = model.Name;
-                track.Rate = model.Rate;
-                Album album = db.Albums.FirstOrDefault(a => a.Name == model.AlbumName);
-                track.AlbumId = album.AlbumId;
-                db.Tracks.Add(track);
-                db.SaveChanges();
-                return RedirectToAction("Details", "Albums", new {id=track.AlbumId});
+                CreateNewTrack(model);
+                return RedirectToAction("Details", "Albums", new {id=GetTrack(model.Id).AlbumId});
             }
-
             return View(model);
         }
 
@@ -115,14 +64,12 @@ namespace MusicRepository.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Track track = db.Tracks.Find(id);
-            if (track == null)
+            if (db.Tracks.Find(id) == null)
             {
                 return HttpNotFound();
             }
-            ViewModelConfig(track);
             ViewBag.Title = "Edit";
-            return View("Create", model);
+            return View("Create", ChangeObjectViewModelInitializer(GetTrack(id)));
         }
 
         // POST: Tracks/Edit/5
@@ -134,13 +81,7 @@ namespace MusicRepository.Controllers
         {
             if (ModelState.IsValid)
             {
-                Track track = db.Tracks.FirstOrDefault(t=>t.TrackId==model.Id);
-                track.Name = model.Name;
-                track.Rate = model.Rate;
-                Album album = db.Albums.FirstOrDefault(a => a.Name == model.AlbumName);
-                track.AlbumId = album.AlbumId;
-                db.Entry(track).State = EntityState.Modified;
-                db.SaveChanges();
+                SaveObjectChanges(model);
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -181,28 +122,128 @@ namespace MusicRepository.Controllers
             base.Dispose(disposing);
         }
 
-        private void ViewModelConfig(Track track = null, int? id = null)
+
+        //__________________________________________________________________________
+        //private methods
+        private Track GetTrack(int? id)
         {
-            albums = new List<Album>();
-            model=new TrackViewModel();
-            model.list = new List<SelectListItem>();
-            albums = db.Albums.ToList();
-            foreach (var a in albums)
+            if (id != null)
             {
-                model.list.Add(new SelectListItem() {Text = a.Name});
+                return db.Tracks.Find(id);
             }
-            if (track != null)
+            else
             {
-                model.Id = track.TrackId;
-                model.Name = track.Name;
-                model.Rate = track.Rate;
-                id = track.AlbumId;
+                return new Track();
+            }
+        }
+
+        private List<Album> GetAlbumsList()
+        {
+            return db.Albums.ToList();
+        } 
+
+        private TrackDetail TrackDetailViewModelInitializer(Track track)
+        {
+            TrackDetail result = new TrackDetail
+            {
+                AlbumId = track.AlbumId,
+                AlbumName = db.Albums.Find(track.AlbumId).Name,
+                AutorId = db.Autors.Find(db.Albums.Find(track.AlbumId).AutorId).AutorId,
+                AutorName = db.Autors.Find(db.Albums.Find(track.AlbumId).AutorId).Name,
+                Id = track.TrackId,
+                Rate = track.Rate,
+                TrackName = track.Name
+            };
+            return result;
+        }
+        private TrackDetail TrackDetailViewModelInitializer(int id)
+        {
+            Track track = GetTrack(id);
+            TrackDetail result = new TrackDetail
+            {
+                AlbumId = track.AlbumId,
+                AlbumName = db.Albums.Find(track.AlbumId).Name,
+                AutorId = db.Autors.Find(db.Albums.Find(track.AlbumId).AutorId).AutorId,
+                AutorName = db.Autors.Find(db.Albums.Find(track.AlbumId).AutorId).Name,
+                Id = id,
+                Rate = track.Rate,
+                TrackName = track.Name
+            };
+            return result;
+        }
+
+        private TrackListViewModel TrackListViewModelInitializer(int page)
+        {
+            TrackListViewModel result = new TrackListViewModel
+            {
+                List = new List<TrackDetail>(),
+                PagingInfo = new PagingInfo
+                {
+                    CurrentPage = page,
+                    ItemsPerPage = PageSize,
+                    TotalItems = db.Tracks.Count()
+                }
+            };
+            foreach (var track in db.Tracks.OrderBy(m => m.TrackId).Skip((page - 1) * PageSize).Take(PageSize))
+            {
+                result.List.Add(TrackDetailViewModelInitializer(track));
+            }
+            return result;
+        }
+
+        private TrackViewModel ChangeObjectViewModelInitializer(Track track = null, int? id = null)
+        {
+            TrackViewModel result;
+            if (track == null)
+            {
+                track = new Track();
+                result = new TrackViewModel
+                {
+                    list = new List<SelectListItem>()
+                };
+            }
+            else
+            {
+                result = new TrackViewModel
+                {
+                    AlbumName = db.Albums.Find(track.AlbumId).Name,
+                    Id = track.TrackId,
+                    list = new List<SelectListItem>(),
+                    Name = track.Name,
+                    Rate = track.Rate
+                };
+            }
+            foreach (var item in GetAlbumsList())
+            {
+                result.list.Add(new SelectListItem {Text = item.Name});
             }
             if (id != null)
             {
-                Album album = db.Albums.FirstOrDefault(a => a.AlbumId == id);
-                model.AlbumName = album.Name;
+                result.AlbumName = db.Albums.Find(id).Name;
             }
+            return result;
+        }
+
+        private void CreateNewTrack(TrackViewModel model)
+        {
+            Track track = new Track
+            {
+                AlbumId = db.Albums.FirstOrDefault(m => m.Name == model.AlbumName).AlbumId,
+                Name = model.Name,
+                Rate = model.Rate,
+            };
+            db.Tracks.Add(track);
+            db.SaveChanges();
+        }
+
+        private void SaveObjectChanges(TrackViewModel model)
+        {
+            Track result = GetTrack(model.Id);
+            result.Name = model.Name;
+            result.Rate = model.Rate;
+            result.AlbumId = db.Albums.FirstOrDefault(m => m.Name == model.AlbumName).AlbumId;
+            db.Entry(result).State=EntityState.Modified;
+            db.SaveChanges();
         }
     }
 }

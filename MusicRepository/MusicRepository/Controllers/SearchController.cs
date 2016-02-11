@@ -23,7 +23,7 @@ namespace MusicRepository.Controllers
             return View(SearchResultsInitializer(query));
         }
 
-
+        //________________________________________________________________
         //private methods
         private SearchResults SearchResultsInitializer(string query)
         {
