@@ -39,18 +39,12 @@ namespace MusicRepository.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Autor autor = db.Autors.Find(id);
-            if (autor == null)
+            if (db.Autors.Find(id) == null)
             {
                 return HttpNotFound();
             }
-            AutorDetails model = new AutorDetails();
-            model.Id = autor.AutorId;
-            model.Name = autor.Name;
-            model.Description = autor.Description;
-            model.albums = db.Albums.Where(a => a.AutorId == autor.AutorId).ToList();
-            ViewBag.Autor = autor;
-            return View(model);
+            ViewBag.Autor = GetAutor(id);
+            return View(AutorDetailsViewModelInitializer((int)id));
         }
 
         // GET: Autors/Create
@@ -70,15 +64,11 @@ namespace MusicRepository.Controllers
             {
                 if (image != null)
                 {
-                    autor.ImageMimeType = image.ContentType;
-                    autor.ImageData = new byte[image.ContentLength];
-                    image.InputStream.Read(autor.ImageData, 0, image.ContentLength);
+                    AddAutorImage(autor, image);
                 }
-                db.Autors.Add(autor);
-                db.SaveChanges();
+                AddItemToRepository(autor);
                 return RedirectToAction("Index");
             }
-
             return View(autor);
         }
 
@@ -89,12 +79,11 @@ namespace MusicRepository.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Autor autor = db.Autors.Find(id);
-            if (autor == null)
+            if (db.Autors.Find(id) == null)
             {
                 return HttpNotFound();
             }
-            return View(autor);
+            return View(GetAutor(id));
         }
 
         // POST: Autors/Edit/5
@@ -108,12 +97,9 @@ namespace MusicRepository.Controllers
             {
                 if (image != null)
                 {
-                    autor.ImageMimeType = image.ContentType;
-                    autor.ImageData = new byte[image.ContentLength];
-                    image.InputStream.Read(autor.ImageData, 0, image.ContentLength);
+                    AddAutorImage(autor, image);
                 }
-                db.Entry(autor).State = EntityState.Modified;
-                db.SaveChanges();
+                SaveItemChanges(autor);
                 return RedirectToAction("Index");
             }
             return View(autor);
@@ -126,22 +112,15 @@ namespace MusicRepository.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Autor autor = db.Autors.Find(id);
-            Album album = db.Albums.FirstOrDefault(m => m.AutorId == autor.AutorId);
-            if (album != null)
+            if (db.Albums.FirstOrDefault(a=>a.AutorId==id) != null)
             {
-                AutorDetails mod=new AutorDetails();
-                mod.Id = autor.AutorId;
-                mod.Name = autor.Name;
-                mod.Description = autor.Description;
-                mod.albums = db.Albums.Where(m => m.AutorId == autor.AutorId).ToList();
-                return View("DeleteWarning", mod);
+                return View("DeleteWarning", AutorDetailsViewModelInitializer((int)id));
             }
-            if (autor == null)
+            if (db.Autors.Find(id) == null)
             {
                 return HttpNotFound();
             }
-            return View(autor);
+            return View(GetAutor(id));
         }
 
         // POST: Autors/Delete/5
@@ -149,9 +128,7 @@ namespace MusicRepository.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Autor autor = db.Autors.Find(id);
-            db.Autors.Remove(autor);
-            db.SaveChanges();
+            DeleteItem(id);
             return RedirectToAction("Index");
         }
 
@@ -179,10 +156,66 @@ namespace MusicRepository.Controllers
 
         public PartialViewResult AutorSummary(int id)
         {
-            Autor autor = db.Autors.FirstOrDefault(m => m.AutorId == id);
-            int count = db.Albums.Where(m => m.AutorId == autor.AutorId).ToList().Count;
+            int count = db.Albums.Where(m => m.AutorId == id).Count();
             ViewBag.Albums = count;
-            return PartialView(autor);
+            return PartialView(GetAutor(id));
+        }
+
+        //_________________________________________________________________________________
+        //private methods
+        private Autor GetAutor(int? id)
+        {
+            if (id != null)
+            {
+                return db.Autors.Find(id);
+            }
+            else
+            {
+                return new Autor();
+            }
+        }
+
+        private List<Album> GetAlbumsList(int autorId)
+        {
+            return db.Albums.Where(a => a.AutorId == autorId).ToList();
+        }
+
+        private AutorDetails AutorDetailsViewModelInitializer(int id)
+        {
+            Autor autor = GetAutor(id);
+            AutorDetails result = new AutorDetails
+            {
+                albums = GetAlbumsList(id),
+                Description = autor.Description,
+                Id = id,
+                Name = autor.Name
+            };
+            return result;
+        }
+
+        private void AddAutorImage(Autor autor, HttpPostedFileBase image)
+        {
+            autor.ImageMimeType = image.ContentType;
+            autor.ImageData = new byte[image.ContentLength];
+            image.InputStream.Read(autor.ImageData, 0, image.ContentLength);
+        }
+        private void AddItemToRepository(Autor autor)
+        {
+            db.Autors.Add(autor);
+            db.SaveChanges();
+        }
+
+        private void SaveItemChanges(Autor autor)
+        {
+            db.Entry(autor).State=EntityState.Modified;
+            db.SaveChanges();
+        }
+
+        private void DeleteItem(int id)
+        {
+            Autor autor = GetAutor(id);
+            db.Autors.Remove(autor);
+            db.SaveChanges();
         }
     }
 }

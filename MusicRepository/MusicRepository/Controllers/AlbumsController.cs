@@ -14,8 +14,6 @@ namespace MusicRepository.Controllers
 {
     public class AlbumsController : Controller
     {
-        List<Autor> autors;
-        AlbumViewModel model;
         private MusicContext db = new MusicContext();
         private int PageSize = 5;
         // GET: Albums
@@ -41,38 +39,20 @@ namespace MusicRepository.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
-            if (album == null)
+            if (db.Albums.Find(id) == null)
             {
                 return HttpNotFound();
             }
-            AlbumDetails model = new AlbumDetails();
-            model.Id = album.AlbumId;
-            model.AutorId = album.AutorId;
-            model.AlbumName = album.Name;
-            model.Description = album.Description;
-            model.Rate = album.Rate;
-            Autor autor = db.Autors.FirstOrDefault(a => a.AutorId == album.AutorId);
-            model.AutorName = autor.Name;
-            model.tracks = db.Tracks.Where(t => t.AlbumId == album.AlbumId).ToList();
-            ViewBag.Album = album;
-            return View(model);
+            ViewBag.Album = GetAlbum(id);
+            return View(AlbumDetailsViewModelInitializer((int)id));
         }
 
         // GET: Albums/Create
         public ActionResult Create(int? Autorid=null)
         {
-            if (Autorid == null)
-            {
-                ViewModelConfig();
-            }
-            else
-            {
-                ViewModelConfig(null, Autorid);
-            }
             ViewBag.Album = new Album();
             ViewBag.Title = "Create";
-            return View(model);
+            return View((Autorid==null)? EditViewModelInitializer(): EditViewModelInitializer((int)Autorid));
         }
         
         // GET: Albums/Edit/5
@@ -87,10 +67,9 @@ namespace MusicRepository.Controllers
             {
                 return HttpNotFound();
             }
-            ViewModelConfig(album);
             ViewBag.Title = "Edit";
             ViewBag.Album = album;
-            return View("Create", model);
+            return View("Create", EditViewModelInitializer(album));
         }
 
         // POST: Albums/Edit/5
@@ -102,26 +81,16 @@ namespace MusicRepository.Controllers
         {
             if (ModelState.IsValid)
             {
-                Album album = db.Albums.FirstOrDefault(a=>a.AlbumId == model.Id);
                 bool newAlbum = false;
-                if (album == null)
+                if (db.Albums.Find(model.Id) == null)
                 {
-                    album = new Album();
                     newAlbum = true;
                 }
+                Album album = ApplyItemChanges(model);
                 if (image != null)
                 {
-                    album.ImageMimeType = image.ContentType;
-                    album.ImageData = new byte[image.ContentLength];
-                    image.InputStream.Read(album.ImageData, 0, image.ContentLength);
+                    AddImageToAlbum(album, image);
                 }
-                album.Name = model.Name;
-                album.Description = model.Description;
-                album.Rate = model.Rate;
-
-                Autor autor = new Autor();
-                autor = db.Autors.FirstOrDefault(a => a.Name == model.AutorName);
-                album.AutorId = autor.AutorId;
                 if (newAlbum)
                 {
                     db.Albums.Add(album);
@@ -143,26 +112,15 @@ namespace MusicRepository.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albums.Find(id);
-            if (album == null)
+            if (db.Albums.Find(id) == null)
             {
                 return HttpNotFound();
             }
-            Track track = db.Tracks.FirstOrDefault(m => m.AlbumId == album.AlbumId);
-            if (track != null)
+            if (db.Tracks.FirstOrDefault(m => m.AlbumId == id) != null)
             {
-                AlbumDetails mod = new AlbumDetails();
-                mod.Id = album.AlbumId;
-                mod.AutorId = album.AutorId;
-                mod.AlbumName = album.Name;
-                mod.Description = album.Description;
-                mod.Rate = album.Rate;
-                Autor autor = db.Autors.FirstOrDefault(m => m.AutorId == album.AutorId);
-                mod.AutorName = autor.Name;
-                mod.tracks = db.Tracks.Where(m => m.AlbumId == album.AlbumId).ToList();
-                return View("DeleteWarning", mod);
+                return View("DeleteWarning", AlbumDetailsViewModelInitializer((int)id));
             }
-            return View(album);
+            return View(GetAlbum(id));
         }
 
         // POST: Albums/Delete/5
@@ -184,30 +142,6 @@ namespace MusicRepository.Controllers
             }
             base.Dispose(disposing);
         }
-        private void ViewModelConfig(Album album = null, int? id = null)
-        {
-            autors = new List<Autor>();
-            model = new AlbumViewModel();
-            model.list = new List<SelectListItem>();
-            autors = db.Autors.ToList();
-            foreach (var a in autors)
-            {
-                model.list.Add(new SelectListItem() { Text = a.Name });
-            }
-            if (album != null)
-            {
-                model.Id = album.AlbumId;
-                model.Name = album.Name;
-                model.Description = album.Description;
-                model.Rate = album.Rate;
-                id = album.AutorId;
-            }
-            if (id != null)
-            {
-                Autor autor = db.Autors.FirstOrDefault(a => a.AutorId == id);
-                model.AutorName = autor.Name;
-            }
-        }
 
         public PartialViewResult AlbumSummary(int id)
         {
@@ -228,6 +162,116 @@ namespace MusicRepository.Controllers
             {
                 return null;
             }
+        }
+
+
+        //____________________________________________________________________
+        //private methods
+        private Album GetAlbum(int? id)
+        {
+            if (id != null)
+            {
+                return db.Albums.Find(id);
+            }
+            else
+            {
+                return new Album();
+            }
+        }
+
+        private Autor GetAutor(int id)
+        {
+            return db.Autors.Find(id);
+        }
+
+        private List<Track> GetTracksList(int id)
+        {
+            return db.Tracks.Where(a => a.AlbumId == id).ToList();
+        }
+
+        private List<Autor> GetAutorsList()
+        {
+            return db.Autors.ToList();
+        } 
+        private AlbumDetails AlbumDetailsViewModelInitializer(int id)
+        {
+            Album album = GetAlbum(id);
+            AlbumDetails result = new AlbumDetails
+            {
+                AlbumName = album.Name,
+                AutorId = album.AutorId,
+                AutorName = GetAlbum(album.AutorId).Name,
+                Description = album.Description,
+                Id = id,
+                Rate = album.Rate,
+                tracks = GetTracksList(id)
+            };
+            return result;
+        }
+
+        private AlbumViewModel EditViewModelInitializer(Album album)
+        {
+            AlbumViewModel result = new AlbumViewModel
+            {
+                Description = album.Description,
+                Id = album.AlbumId,
+                list = new List<SelectListItem>(),
+                Name = album.Name,
+                AutorName = GetAutor(album.AutorId).Name,
+                Rate = album.Rate
+            };
+            foreach (var item in GetAutorsList())
+            {
+                result.list.Add(new SelectListItem {Text = item.Name});
+            }
+            return result;
+        }
+
+        private AlbumViewModel EditViewModelInitializer(int id)
+        {
+            AlbumViewModel result = new AlbumViewModel
+            {
+                list = new List<SelectListItem>(),
+                AutorName = GetAutor(id).Name
+            };
+            foreach (var item in GetAutorsList())
+            {
+                result.list.Add(new SelectListItem { Text = item.Name });
+            }
+            return result;
+        }
+        private AlbumViewModel EditViewModelInitializer()
+        {
+            AlbumViewModel result = new AlbumViewModel
+            {
+                list = new List<SelectListItem>()
+            };
+            foreach (var item in GetAutorsList())
+            {
+                result.list.Add(new SelectListItem { Text = item.Name });
+            }
+            return result;
+        }
+
+        private void AddImageToAlbum(Album album, HttpPostedFileBase image)
+        {
+            album.ImageMimeType = image.ContentType;
+            album.ImageData = new byte[image.ContentLength];
+            image.InputStream.Read(album.ImageData, 0, image.ContentLength);
+        }
+
+        private Album ApplyItemChanges(AlbumViewModel model)
+        {
+            Album result = GetAlbum(model.Id);
+            if (result == null)
+            {
+                result=new Album();
+            }
+            result.Name = model.Name;
+            result.Description = model.Description;
+            result.Rate = model.Rate;
+            result.AutorId = db.Autors.FirstOrDefault(a => a.Name == model.AutorName).AutorId;
+            return result;
         }
     }
 }
